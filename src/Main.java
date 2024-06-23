@@ -11,6 +11,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Menu");
+        System.out.println();
         System.out.println("1. Check available seats");
         System.out.println("2. Register student (with ID)");
         System.out.println("3. Delete student");
@@ -46,6 +47,7 @@ public class Main {
                 break;
             default:
                 System.out.println("Invalid choice. Try again");
+                System.out.println();
                 menu();
         }
     }
