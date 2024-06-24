@@ -19,7 +19,7 @@ public class Main {
         System.out.println("5. Store student details into a file");
         System.out.println("6. Load student details from a file to the system");
         System.out.println("7. View the list of students based on their names");
-
+        System.out.println();
         System.out.println("Enter your choice");
         int choice = scanner.nextInt();
 
