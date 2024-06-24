@@ -52,7 +52,7 @@ public class Main {
         }
     }
     private static void checkAvailableSeats(){
-
+        System.out.println("Available seats: 100");
     }
     private static void registerStudent(){
 
