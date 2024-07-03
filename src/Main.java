@@ -1,6 +1,6 @@
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -142,7 +142,9 @@ public class Main {
         try{
             FileWriter file = new FileWriter("StudentDetails.txt");
             for (String[] studentDetail : studentDetails) {
-                file.write(Arrays.toString(studentDetail) + "\n");
+                if (studentDetail[0] != null) {
+                    file.write(studentDetail[0] + "," + studentDetail[1] + "\n");
+                }
             }
             file.close();
         }catch (IOException e){
@@ -153,7 +155,27 @@ public class Main {
     }
 
     private static void loadFromFile(){
-
+        try{
+            File file = new File("StudentDetails.txt");
+            Scanner fileReader = new Scanner(file);
+            while(fileReader.hasNextLine()){
+                String[] data = fileReader.nextLine().split(",");
+                if (!(data[0] == null)){
+                    for (int i = 0; i < studentDetails.length; i++) {
+                        if (studentDetails[i][0] == null) {
+                            studentDetails[i][0] = data[0];
+                            studentDetails[i][1] = data[1];
+                            studentCount++;
+                            break;
+                        }
+                    }
+                }
+            }
+            fileReader.close();
+        }catch(IOException e){
+            System.out.println("Error while reading from file");
+            e.printStackTrace();
+        }
     }
 
     private static void sortStudents(){
