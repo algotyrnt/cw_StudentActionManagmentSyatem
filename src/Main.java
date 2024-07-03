@@ -1,3 +1,6 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -49,15 +52,19 @@ public class Main {
                     break;
                 case 4:
                     findStudent(scanner);
+                    menu();
                     break;
                 case 5:
                     saveToFile();
+                    menu();
                     break;
                 case 6:
                     loadFromFile();
+                    menu();
                     break;
                 case 7:
                     sortStudents();
+                    menu();
                     break;
                 default:
                     System.out.println("Invalid choice. Try again");
@@ -132,11 +139,23 @@ public class Main {
     }
 
     private static void saveToFile(){
-
+        try{
+            FileWriter file = new FileWriter("StudentDetails.txt");
+            for (String[] studentDetail : studentDetails) {
+                file.write(Arrays.toString(studentDetail) + "\n");
+            }
+            file.close();
+        }catch (IOException e){
+            System.out.println("Error while writing to the file");
+            e.printStackTrace();
+        }
+        System.out.println("Student details saved.");
     }
+
     private static void loadFromFile(){
 
     }
+
     private static void sortStudents(){
 
     }
