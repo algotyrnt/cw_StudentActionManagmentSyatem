@@ -17,8 +17,7 @@ public class Main {
         int choice;
 
         while(true) {
-            System.out.println("\nMenu");
-            System.out.println();
+            System.out.println("\nMenu\n");
             System.out.println("1. Check available seats");
             System.out.println("2. Register student (with ID)");
             System.out.println("3. Delete student");
@@ -31,7 +30,7 @@ public class Main {
             try {
                 choice = scanner.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Invalid choice, please try again");
+                System.err.println("Invalid input, please try again");
                 System.out.println();
                 scanner.next();
                 continue;
@@ -67,8 +66,7 @@ public class Main {
                     menu();
                     break;
                 default:
-                    System.out.println("Invalid choice. Try again");
-                    System.out.println();
+                    System.err.println("Invalid choice. Try again");
                     continue;
             }
             break;
@@ -76,22 +74,24 @@ public class Main {
     }
 
     private static void checkAvailableSeats(){
+        System.out.println("\nSeat Availability\n");
         System.out.println("Available seats: " + (studentDetails.length - studentCount));
     }
 
     private static void registerStudent(Scanner scanner){
-        if (studentDetails.length >= studentCount) {
+        System.out.println("\nStudent Registration\n");
+        if (studentDetails.length > studentCount) {
             while(true) {
                 System.out.println("Enter student ID: ");
                 String studentID = scanner.next();
                 scanner.nextLine();
                 if (!(studentID.startsWith("w") && studentID.length() == 8)){
-                    System.out.println("Student ID must start with 'w' and contains 8 characters");
+                    System.err.println("Student ID must start with 'w' and contains 8 characters");
                     continue;
                 }
                 for (int i = 0; i < studentDetails.length; i++) {
                     if (studentID.equals(studentDetails[i][0]) ){
-                        System.out.println("Student ID already exists.");
+                        System.err.println("Student ID already exists.");
                         break;
                     }else if (studentDetails[i][0] == null) {
                         System.out.println("Enter student name: ");
@@ -102,6 +102,9 @@ public class Main {
                         break;
                     }
                 }
+                for (String[] student : studentDetails){
+                    System.out.println(student[0] + " " + student[1]);
+                }
                 break;
             }
         }else{
@@ -111,74 +114,112 @@ public class Main {
     }
 
     private static void deleteStudent(Scanner scanner){
-        System.out.println("Enter student ID: ");
-        String studentID = scanner.next();
-        scanner.nextLine();
-        for (int i = 0; i < studentDetails.length; i++) {
-            if (studentID.equals(studentDetails[i][0]) ){
-                studentDetails[i][0] = null;
-                studentDetails[i][1] = null;
-                studentCount--;
-                System.out.println("Student ID: " + studentID + " deleted.");
-                break;
+        System.out.println("\nDelete a Registered Student\n");
+        if(studentCount > 0){
+            System.out.println("Enter student ID: ");
+            String studentID = scanner.next();
+            scanner.nextLine();
+            for (int i = 0; i < studentDetails.length; i++) {
+                if (studentID.equals(studentDetails[i][0])) {
+                    studentDetails[i][0] = null;
+                    studentDetails[i][1] = null;
+                    studentCount--;
+                    System.out.println("Student ID: " + studentID + " deleted.");
+                    break;
+                }
             }
+        }else{
+            System.err.println("There is no student details available to delete.");
         }
     }
 
     private static void findStudent(Scanner scanner){
-        System.out.println("Enter student ID: ");
-        String studentID = scanner.next();
-        scanner.nextLine();
-        for (String[] studentDetail : studentDetails) {
-            if (studentID.equals(studentDetail[0])) {
-                System.out.println("Student ID: " + studentID);
-                System.out.println("Student Name: " + studentDetail[1]);
-                break;
+        if (studentCount > 0){
+            System.out.println("\nFind a Registered Student\n");
+            System.out.println("Enter student ID: ");
+            String studentID = scanner.next();
+            scanner.nextLine();
+            for (String[] studentDetail : studentDetails) {
+                if (studentID.equals(studentDetail[0])) {
+                    System.out.println("Student ID: " + studentID);
+                    System.out.println("Student Name: " + studentDetail[1]);
+                    break;
+                } else {
+                    System.err.println("Student ID not found.");
+                }
             }
+        }else {
+            System.err.println("There is no student details available to find with student ID.");
         }
     }
 
     private static void saveToFile(){
-        try{
-            FileWriter file = new FileWriter("StudentDetails.txt");
-            for (String[] studentDetail : studentDetails) {
-                if (studentDetail[0] != null) {
-                    file.write(studentDetail[0] + "," + studentDetail[1] + "\n");
+        System.out.println("\nSave Student Details to StudentDetails.txt File\n");
+        if (studentCount > 0){
+            try {
+                FileWriter file = new FileWriter("StudentDetails.txt");
+                for (String[] studentDetail : studentDetails) {
+                    if (studentDetail[0] != null) {
+                        file.write(studentDetail[0] + "," + studentDetail[1] + "\n");
+                    }
                 }
+                System.out.println("Student details saved.");
+                file.close();
+            } catch (IOException e) {
+                System.err.println("Error while writing to the file");
+                e.printStackTrace();
             }
-            file.close();
-        }catch (IOException e){
-            System.out.println("Error while writing to the file");
-            e.printStackTrace();
+        }else{
+            System.err.println("There is no student details available to save to StudentDetails.txt file.");
         }
-        System.out.println("Student details saved.");
     }
 
     private static void loadFromFile(){
+        System.out.println("\nLoad Student Details from StudentDetails.txt File\n");
         try{
             File file = new File("StudentDetails.txt");
             Scanner fileReader = new Scanner(file);
             while(fileReader.hasNextLine()){
                 String[] data = fileReader.nextLine().split(",");
-                if (!(data[0] == null)){
-                    for (int i = 0; i < studentDetails.length; i++) {
-                        if (studentDetails[i][0] == null) {
-                            studentDetails[i][0] = data[0];
-                            studentDetails[i][1] = data[1];
-                            studentCount++;
-                            break;
-                        }
+                System.out.println(data[0] + " " + data[1]);
+                for (int i = 0; i < studentDetails.length; i++) {
+                    if (studentDetails[i][0] == null) {
+                        studentDetails[i][0] = data[0];
+                        studentDetails[i][1] = data[1];
+                        studentCount++;
+                        System.out.println("Student details loaded from the file.");
+                        break;
                     }
                 }
             }
             fileReader.close();
         }catch(IOException e){
-            System.out.println("Error while reading from file");
+            System.err.println("Error while reading from file");
             e.printStackTrace();
         }
     }
 
     private static void sortStudents(){
-
+        System.out.println("\nView the list of students sorted in alphabetical order\n");
+        if (studentCount == 1){
+            System.out.println((1) + ". " + studentDetails[0][0] + " " + studentDetails[0][1]);
+        }else if (studentCount > 2) {
+            String[][] namesSorted = new String[studentCount][2];
+            for (int i = 0; i < studentCount - 1; i++) {
+                for (int j = i + 1; j < studentCount; j++) {
+                    if (studentDetails[i][1].compareTo(studentDetails[j][1]) > 0) {
+                        namesSorted[i] = studentDetails[j];
+                        namesSorted[j] = studentDetails[i];
+                    } else {
+                        namesSorted[i] = studentDetails[i];
+                    }
+                }
+            }
+            for (int i = 0; i < namesSorted.length; i++) {
+                System.out.println((i + 1) + ". " + namesSorted[i][0] + " " + namesSorted[i][1]);
+            }
+        }else{
+            System.err.println("There is no student details available to view.");
+        }
     }
 }
