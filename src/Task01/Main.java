@@ -91,11 +91,14 @@ public class Main {
                     System.err.println("Student ID must start with 'w' and contains 8 characters");
                     continue;
                 }
-                for (int i = 0; i < studentDetails.length; i++) {
-                    if (studentID.equals(studentDetails[i][0]) ){
+                for (String[] studentDetail : studentDetails) {
+                    if (studentID.equals(studentDetail[0])) {
                         System.err.println("Student ID already exists.");
-                        break;
-                    }else if (studentDetails[i][0] == null) {
+                        return;
+                    }
+                }
+                for (int i = 0; i < studentDetails.length; i++) {
+                    if (studentDetails[i][0] == null) {
                         System.out.println("Enter student name: ");
                         String studentName = scanner.nextLine();
                         studentDetails[i][0] = studentID;
@@ -103,9 +106,6 @@ public class Main {
                         studentCount++;
                         break;
                     }
-                }
-                for (String[] student : studentDetails){
-                    System.out.println(student[0] + " " + student[1]);
                 }
                 break;
             }
@@ -206,10 +206,10 @@ public class Main {
         if (studentCount == 1){
             System.out.println((1) + ". " + studentDetails[0][0] + " " + studentDetails[0][1]);
         }else if (studentCount > 2) {
-            String[][] namesSorted = new String[studentCount][2];
+            String[][] namesSorted = studentDetails;
             for (int i = 0; i < studentCount - 1; i++) {
                 for (int j = i + 1; j < studentCount; j++) {
-                    if (studentDetails[i][1].compareTo(studentDetails[j][1]) > 0) {
+                    if (studentDetails[i][1].compareToIgnoreCase(studentDetails[j][1]) > 0) {
                         namesSorted[i] = studentDetails[j];
                         namesSorted[j] = studentDetails[i];
                     } else {

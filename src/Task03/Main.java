@@ -1,4 +1,4 @@
-package Task02;
+package Task03;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -240,6 +240,8 @@ public class Main {
             System.out.println("\nMore Options\n");
             System.out.println("a. Add/Update student name");
             System.out.println("b. Module marks 1, 2 and 3");
+            System.out.println("c. Generate a summary of the system");
+            System.out.println("d. Generate a report with list of students");
             System.out.println();
             System.out.println("Enter your choice");
             try {
@@ -256,6 +258,12 @@ public class Main {
                     break;
                 case "b":
                     addModuleMarks(scanner);
+                    break;
+                case "c":
+                    generateSummary();
+                    break;
+                case "d":
+                    generateReport();
                     break;
                 default:
                     System.err.println("Invalid choice. Try again");
@@ -318,5 +326,22 @@ public class Main {
         }else {
             System.err.println("There is no student details available to add module marks.");
         }
+    }
+
+    private static void generateSummary(){
+        System.out.println("\nSummary of the System\n");
+        System.out.println("* The total student registrations - " + studentCount);
+
+        int passStudents = 0;
+        for (Student student : students) {
+            if (student != null) {
+                passStudents += student.countModulePassStudent();
+            }
+        }
+        System.out.println("* Total no of student scored more than 40 marks in all modules - " + passStudents);
+    }
+
+    private static void generateReport(){
+
     }
 }

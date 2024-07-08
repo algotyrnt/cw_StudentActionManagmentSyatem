@@ -1,4 +1,4 @@
-package Task02;
+package Task03;
 
 public class Module {
     private final Double marks;
