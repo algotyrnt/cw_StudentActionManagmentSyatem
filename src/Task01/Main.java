@@ -1,3 +1,11 @@
+/**
+ * Project Name: cw_StudentActionManagementSystem
+ * File Name: Main.java
+ * Description: This has the main functionality of the program.
+ * Author: Punjitha Bandara - w2083155
+ * Start Date: June 23, 2024
+ */
+
 package Task01;
 
 import java.io.File;
@@ -7,13 +15,19 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
-    private static int studentCount = 0;
-    private static final String[][] studentDetails = new String[100][2];
+    private static int studentCount = 0; // Holds the count of registered students
+    private static final String[][] studentDetails = new String[100][2]; // 2D Array to store student details
 
+    /**
+     * Main method to run the program
+     */
     public static void main(String[] args) {
         menu();
     }
 
+    /**
+     * Menu method to display the menu and get the user input
+     */
     private static void menu(){
         Scanner scanner = new Scanner(System.in);
         int choice;
@@ -34,8 +48,9 @@ public class Main {
             } catch (InputMismatchException e) {
                 System.err.println("Invalid input, please try again");
                 System.out.println();
-                scanner.next();
                 continue;
+            }finally {
+                scanner.nextLine();
             }
 
             switch (choice) {
@@ -75,52 +90,70 @@ public class Main {
         }
     }
 
+    /**
+     * Checks and displays the number of available seats.
+     * Calculates available seats by subtracting the current student count from the total capacity.
+     */
     private static void checkAvailableSeats(){
         System.out.println("\nSeat Availability\n");
         System.out.println("Available seats: " + (studentDetails.length - studentCount));
     }
 
+    /**
+     * Registers a new student if there is an available seat.
+     * Prompts the user for a student ID and name, checks for ID uniqueness, and adds the student to the array.
+     * @param scanner Scanner object for reading user input.
+     */
     private static void registerStudent(Scanner scanner){
         System.out.println("\nStudent Registration\n");
         if (studentDetails.length > studentCount) {
-            while(true) {
-                System.out.println("Enter student ID: ");
-                String studentID = scanner.next();
-                scanner.nextLine();
-                if (!(studentID.startsWith("w") && studentID.length() == 8)){
-                    System.err.println("Student ID must start with 'w' and contains 8 characters");
-                    continue;
+            String studentID = studentIDInput(scanner);
+            for (String[] studentDetail : studentDetails) {
+                if (studentID.equals(studentDetail[0])) {
+                    System.err.println("Student ID already exists.");
+                    return;
                 }
-                for (String[] studentDetail : studentDetails) {
-                    if (studentID.equals(studentDetail[0])) {
-                        System.err.println("Student ID already exists.");
-                        return;
-                    }
+            }
+            for (int i = 0; i < studentDetails.length; i++) {
+                if (studentDetails[i][0] == null) {
+                    System.out.println("Enter student name: ");
+                    String studentName = scanner.nextLine();
+                    studentDetails[i][0] = studentID;
+                    studentDetails[i][1] = studentName;
+                    studentCount++;
+                    break;
                 }
-                for (int i = 0; i < studentDetails.length; i++) {
-                    if (studentDetails[i][0] == null) {
-                        System.out.println("Enter student name: ");
-                        String studentName = scanner.nextLine();
-                        studentDetails[i][0] = studentID;
-                        studentDetails[i][1] = studentName;
-                        studentCount++;
-                        break;
-                    }
-                }
-                break;
             }
         }else{
             System.out.println("There are no more seats available");
         }
-
     }
 
+    /**
+     * Prompts the user for a student ID, ensuring it starts with 'w' and contains 8 characters.
+     * @param scanner Scanner object for reading user input.
+     * @return The validated student ID.
+     */
+    private static String studentIDInput(Scanner scanner){
+        while (true) {
+            System.out.println("Enter student ID: ");
+            String studentID = scanner.nextLine();
+            if (!(studentID.startsWith("w") && studentID.length() == 8)) {
+                System.err.println("Invalid ID, student ID must start with 'w' and contains 8 characters");
+            }else {
+                return studentID;
+            }
+        }
+    }
+
+    /**
+     * Deletes a student from the system based on the provided student ID.
+     * @param scanner Scanner object for reading user input.
+     */
     private static void deleteStudent(Scanner scanner){
         System.out.println("\nDelete a Registered Student\n");
         if(studentCount > 0){
-            System.out.println("Enter student ID: ");
-            String studentID = scanner.next();
-            scanner.nextLine();
+            String studentID = studentIDInput(scanner);
             for (int i = 0; i < studentDetails.length; i++) {
                 if (studentID.equals(studentDetails[i][0])) {
                     studentDetails[i][0] = null;
@@ -135,12 +168,14 @@ public class Main {
         }
     }
 
+    /**
+     * Finds and displays a student's details based on the provided student ID.
+     * @param scanner Scanner object for reading user input.
+     */
     private static void findStudent(Scanner scanner){
         if (studentCount > 0){
             System.out.println("\nFind a Registered Student\n");
-            System.out.println("Enter student ID: ");
-            String studentID = scanner.next();
-            scanner.nextLine();
+            String studentID = studentIDInput(scanner);
             for (String[] studentDetail : studentDetails) {
                 if (studentID.equals(studentDetail[0])) {
                     System.out.println("Student ID: " + studentID);
@@ -155,6 +190,9 @@ public class Main {
         }
     }
 
+    /**
+     * Saves the details of all registered students to a file named "StudentDetails.txt".
+     */
     private static void saveToFile(){
         System.out.println("\nSave Student Details to StudentDetails.txt File\n");
         if (studentCount > 0){
@@ -176,6 +214,9 @@ public class Main {
         }
     }
 
+    /**
+     * Loads student details from a file named "StudentDetails.txt" and adds them to the system.
+     */
     private static void loadFromFile(){
         System.out.println("\nLoad Student Details from StudentDetails.txt File\n");
         try{
@@ -201,6 +242,9 @@ public class Main {
         }
     }
 
+    /**
+     * Sorts and displays the list of students based on their names in alphabetical order.
+     */
     private static void sortStudents(){
         System.out.println("\nView the list of students sorted in alphabetical order\n");
         if (studentCount == 1){

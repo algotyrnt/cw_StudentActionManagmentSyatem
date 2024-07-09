@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 public class Main {
     private static int studentCount = 0; // Holds the count of registered students
-    private static final Student[] students = new Student[100]; // Array to store student objects, with a maximum of 100 students
+    private static final Student[] students = new Student[100]; // Array to store student details of 100 students
 
     /**
      * The main method that initiates the program.
@@ -112,7 +112,7 @@ public class Main {
      */
     private static void registerStudent(Scanner scanner) {
         System.out.println("\nStudent Registration\n");
-        if (100 > studentCount) {
+        if (students.length > studentCount) {
             String studentID = studentIDInput(scanner);
             for (int i = 0; i < studentCount; i++) {
                 if (students[i].getID().equals(studentID)) {
