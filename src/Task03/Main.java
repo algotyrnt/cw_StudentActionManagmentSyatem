@@ -222,6 +222,12 @@ public class Main {
             Scanner fileReader = new Scanner(file);
             while(fileReader.hasNextLine()){
                 String[] data = fileReader.nextLine().split(",");
+                for (int i = 0; i < studentCount; i++) {
+                    if (students[i].getID().equals(data[0])) {
+                        System.err.println("Student ID : "+ data[0] + " already exists in the system, Duplicate ID not allowed.");
+                        break;
+                    }
+                }
                 for (int i = 0; i < students.length; i++) {
                     if (students[i] == null) {
                         students[i] = new Student(data[0], data[1]);
