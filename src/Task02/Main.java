@@ -206,7 +206,7 @@ public class Main {
                 file.close();
             } catch (IOException e) {
                 System.err.println("Error while writing to the file");
-                //e.printStackTrace();
+                e.printStackTrace();
             }
         }else{
             System.err.println("There is no student details available to save to StudentDetails.txt file.");
@@ -223,30 +223,34 @@ public class Main {
             Scanner fileReader = new Scanner(file);
             while(fileReader.hasNextLine()){
                 String[] data = fileReader.nextLine().split(",");
+                boolean uniqueID = true;
                 for (int i = 0; i < studentCount; i++) {
                     if (students[i].getID().equals(data[0])) {
-                        System.err.println("Student ID : "+ data[0] + " already exists in the system, Duplicate ID not allowed.");
+                        System.out.println("Student ID : "+ data[0] + " already exists in the system, Duplicate ID not allowed.");
+                        uniqueID = false;
                         break;
                     }
                 }
-                for (int i = 0; i < students.length; i++) {
-                    if (students[i] == null) {
-                        students[i] = new Student(data[0], data[1]);
-                        Module[] module = new Module[3];
-                        module[0] = new Module(Double.parseDouble(data[2]));
-                        module[1] = new Module(Double.parseDouble(data[3]));
-                        module[2] = new Module(Double.parseDouble(data[4]));
-                        students[i].setModule(module);
-                        studentCount++;
-                        break;
+                if (uniqueID){
+                    for (int i = 0; i < students.length; i++) {
+                        if (students[i] == null) {
+                            students[i] = new Student(data[0], data[1]);
+                            Module[] module = new Module[3];
+                            module[0] = new Module(Double.parseDouble(data[2]));
+                            module[1] = new Module(Double.parseDouble(data[3]));
+                            module[2] = new Module(Double.parseDouble(data[4]));
+                            students[i].setModule(module);
+                            studentCount++;
+                            break;
+                        }
                     }
                 }
             }
-            System.out.println("Student details loaded from the file.");
+            System.out.println("\nStudent details loaded from the file.");
             fileReader.close();
         }catch(IOException e){
             System.err.println("Error while reading from file");
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

@@ -8,9 +8,7 @@
 
 package Task03;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -113,17 +111,16 @@ public class Main {
     private static void registerStudent(Scanner scanner) {
         System.out.println("\nStudent Registration\n");
         if (students.length > studentCount) {
-            String studentID = studentIDInput(scanner);
-            for (int i = 0; i < studentCount; i++) {
-                if (students[i].getID().equals(studentID)) {
-                    System.err.println("Student ID already exists.");
-                    return;
+            while (true){
+                String studentID = studentIDInput(scanner);
+                if (newIDCheck(studentID)) {
+                    System.out.println("Enter student name: ");
+                    String studentName = scanner.nextLine();
+                    students[studentCount] = new Student(studentID, studentName);
+                    studentCount++;
+                    break;
                 }
             }
-            System.out.println("Enter student name: ");
-            String studentName = scanner.nextLine();
-            students[studentCount] = new Student(studentID, studentName);
-            studentCount++;
         } else {
             System.out.println("There are no more seats available");
         }
@@ -144,6 +141,16 @@ public class Main {
                 return studentID;
             }
         }
+    }
+
+    private static boolean newIDCheck(String studentID){
+        for (int i = 0; i < studentCount; i++) {
+            if (students[i].getID().equals(studentID)) {
+                System.out.println("Student ID : "+ studentID + " already exists in the system, Duplicate ID not allowed.");
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -219,33 +226,33 @@ public class Main {
         System.out.println("\nLoad Student Details from StudentDetails.txt File\n");
         try{
             File file = new File("StudentDetails.txt");
-            Scanner fileReader = new Scanner(file);
-            while(fileReader.hasNextLine()){
-                String[] data = fileReader.nextLine().split(",");
-                for (int i = 0; i < studentCount; i++) {
-                    if (students[i].getID().equals(data[0])) {
-                        System.err.println("Student ID : "+ data[0] + " already exists in the system, Duplicate ID not allowed.");
-                        break;
-                    }
-                }
-                for (int i = 0; i < students.length; i++) {
-                    if (students[i] == null) {
-                        students[i] = new Student(data[0], data[1]);
-                        Module[] module = new Module[3];
-                        module[0] = new Module(Double.parseDouble(data[2]));
-                        module[1] = new Module(Double.parseDouble(data[3]));
-                        module[2] = new Module(Double.parseDouble(data[4]));
-                        students[i].setModule(module);
-                        studentCount++;
-                        break;
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            String line;
+            while((line = bufferedReader.readLine()) != null){
+                String[] data = line.split(",");
+                if (newIDCheck(data[0])){
+                    for (int i = 0; i < students.length; i++) {
+                        if (students[i] == null) {
+                            students[i] = new Student(data[0], data[1]);
+                            Module[] module = new Module[3];
+                            module[0] = new Module(Double.parseDouble(data[2]));
+                            module[1] = new Module(Double.parseDouble(data[3]));
+                            module[2] = new Module(Double.parseDouble(data[4]));
+                            students[i].setModule(module);
+                            studentCount++;
+                            break;
+                        }
                     }
                 }
             }
-            System.out.println("Student details loaded from the file.");
-            fileReader.close();
-        }catch(IOException e){
+            System.out.println("\nStudent details loaded from the file.");
+            bufferedReader.close();
+        } catch(FileNotFoundException e){
+            System.err.println("File not found");
+            e.printStackTrace();
+        } catch(IOException e){
             System.err.println("Error while reading from file");
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
